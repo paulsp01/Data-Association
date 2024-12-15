@@ -3,7 +3,7 @@ const app=express();
 const userModel=require('./models/user');
 const postModel=require('./models/post');
 const cookieParser=require('cookie-parser');
-const bcrypt=require('bcrypt');
+const bcrypt=require('bcryptjs');
 const jwt=require('jsonwebtoken');
 const router = express.Router();
 
