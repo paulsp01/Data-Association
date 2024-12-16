@@ -6,16 +6,81 @@ const cookieParser=require('cookie-parser');
 const bcrypt=require('bcryptjs');
 const jwt=require('jsonwebtoken');
 const router = express.Router();
+const multerConfig=require('./config/multerConfig');
+const path=require("path");
+const upload = require('./config/multerConfig');
+const fs = require("fs");
 
 app.set('view engine','ejs');
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname,"public")));
 app.use(cookieParser());
 
 app.get('/',(req,res)=>{
 
  res.render('index');
 });
+
+app.get("/profile/upload", (req, res) => {
+
+  res.render("profileUpload");
+});
+
+app.get("/profile/update", (req, res) => {
+  res.render("updateprofile");
+});
+
+app.post("/upload",isLoggedin,upload.single("image"), async (req, res) => {
+  let user=await userModel.findOne({email:req.user.email});
+  user.profilepic=req.file.filename;
+  await user.save();
+  res.redirect("/profile");
+
+});
+
+
+
+
+app.post("/upload/update", isLoggedin, upload.single("image"), async (req, res) => {
+  let user = await userModel.findOne({ email: req.user.email });
+ const oldImage=path.join(__dirname,"/public/images/uploads",user.profilepic);
+
+  if (user.profilepic && fs.existsSync(oldImage)) {
+    fs.unlinkSync(oldImage);
+
+    user.profilepic = req.file.filename;
+    await user.save();
+  }
+  res.redirect("/profile");
+
+});
+
+
+app.post("/delete/image",isLoggedin,upload.single("image"),async (req, res) => {
+   let user = await userModel.findOne({ email: req.user.email });
+   const oldImage = path.join(
+     __dirname,
+     "/public/images/uploads",
+     user.profilepic
+   );
+
+  if (user.profilepic && user.profilepic !== "profile.png" && fs.existsSync(oldImage)) {
+      fs.unlinkSync(oldImage); 
+    }
+
+   
+    user.profilepic = "profile.png";
+     await user.save();
+   
+   res.redirect("/profile");
+
+
+  }
+);
+
+
+
 
 app.get('/profile',isLoggedin,async (req,res)=>{
   

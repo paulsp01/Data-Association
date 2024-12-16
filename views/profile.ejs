@@ -13,12 +13,20 @@
        
       
             <diV class="mb-10 ">
-                <div class="py-10">
-                    <a href="/logout" class="bg-orange-500 px-3 py-3 mt-10 rounded-md">Logout</a>
+                <div class="pt-10 flex justify-between">
+                    
+                    <h3 class="text-3xl mb-5">Profile page</h3>
+                    <a href="/logout" class="bg-orange-500 px-3 py-3  rounded-md">Logout</a>
                 </div>
+                <a href="/profile/upload" class="text-indigo-400 ">Upload ProfileImage</a>
              
-             <h3 class="text-3xl mb-5">profile page</h3>
-            <h1 class="mb-5">Welcome, <%= user.name %></h1>
+             
+             <div class="w-20 h-20 rounded-full overflow-hidden mt-2 ">
+                <img src="/images/uploads/<%=user.profilepic%>" class="w-20 h-20 object-cover  rounded-full border border-4 border-lime-300">
+               
+             </div>
+              <a href="/profile/update" class="text-indigo-400 ">Edit</a>
+            <h1 class="mb-5 mt-5">Welcome, <%= user.name %></h1>
            <h5 class="mb-5" >You can Create your own posts</h5>
 
            <form class="flex flex-wrap gap-3" action="/post" method="post">
